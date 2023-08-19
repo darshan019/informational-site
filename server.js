@@ -10,31 +10,17 @@ const server = http.createServer((req, res) => {
 
   let path = ''
 
-
-  switch(req.url) {
-    case '/': {
-      res.statusCode = 200
-      path += 'index.html'
-      break
-    }
-    case '/about': {
-      res.statusCode = 200
-      path += 'about.html'
-      break
-    }
-    case '/contact-me': {
-      res.statusCode = 200
-      path += 'contact-me.html'
-      break
-    }
-    default: {
-      res.statusCode = 404
-      path += '404.html'
-    }
-  }
+  if(req.url == '/')  path += 'index.html'
+  else if(req.url == '/about')  path += 'about.html'
+  else if(req.url == '/contact-me')  path += 'contact-me.html'
+  else  path += '404.html'
 
   fs.readFile(path, (err, data) => {
-    if(err) console.log(err)
+    if(err) {
+      console.log(err)
+      res.writeHead(404, {'Content-Type': 'text/html'});
+      return res.end(`<h1>Error: 404</h1><p>The page you are looking for doesn't exist.</p> <a href="/">Back home.</a>`);
+    }
     res.end(data)
   })
 
